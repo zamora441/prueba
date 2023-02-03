@@ -1,32 +1,49 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import QRCode from 'qrcode'
+import QRScanner from 'cordova-plugin-qrscanner'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const canvasRef = useRef(null)
+  const videoRef = useRef(null)
+  const divRef = useRef(null)
+
+  const qrImage = QRCode.toCanvas(canvasRef.current,'holaaaaa', { errorCorrectionLevel: 'H' }, (error,) => {
+    if (error) {
+      console.log(error);
+    }
+  })
+
+  const done = (error, status) => {
+    if (error) {
+    console.log(error._message);
+    }
+  }
+  
+  const displayContents = (error, content) => {
+    if(error){
+      console.log(error._message);
+    } else {
+      console.log(content);
+    }
+  }
+
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div className="App" ref={divRef}>
+      <button onClick={() => {
+        console.log('click');
+        QRScanner.scan(displayContents)
+        QRScanner.show(status => {
+          console.log(status);
+        })
+      }}>escanear</button>
+
+      <canvas ref={canvasRef}></canvas>
+
+      <video ref={videoRef} ></video>
     </div>
   )
 }
