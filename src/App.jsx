@@ -12,6 +12,7 @@ function App() {
   const canvasRef = useRef(null)
   const videoRef = useRef()
   const divRef = useRef(null)
+
   const qrImage = QRCode.toCanvas(canvasRef.current,'holaaaaa', { errorCorrectionLevel: 'H' }, (error,) => {
     if (error) {
       console.log(error);
@@ -46,10 +47,14 @@ function App() {
       <div id="reader" ></div>
       <button onClick={() => {
         console.log('click');
-        /*   const scanner = new QrScanner(videoRef.current, result => console.log(result), { returnDetailedScanResult: true }) */
-        
         html5QrCode.start({ facingMode: "environment" }, config, scanner)
-      }}>escanear</button>
+      }}>escaner 1(html5QrCode)</button>
+
+      <button onClick={() => {
+        console.log('click');
+        const qrScanner = new QrScanner(videoRef.current, result => console.log(result), { returnDetailedScanResult: true }) 
+        qrScanner.start()
+      }}>escaner 2 qrScanner</button>
 
       <canvas ref={canvasRef}></canvas>
       <video ref={videoRef} disablePictureInPicture playsInline ></video>
